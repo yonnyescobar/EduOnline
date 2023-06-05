@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using EduOnline.DAL;
 using EduOnline.DAL.Entities;
+using EduOnline.Models;
 
 namespace EduOnline.Controllers
 {
@@ -25,7 +26,9 @@ namespace EduOnline.Controllers
         #region Country Actions
         public async Task<IActionResult> Index()
         {
-              return View(await _context.Countries.ToListAsync());
+            return View(await _context.Countries
+                .Include(c => c.States)
+                .ToListAsync());
         }
                 
         public IActionResult Create()
@@ -132,15 +135,16 @@ namespace EduOnline.Controllers
             return View(country);
         }
 
-        public async Task<IActionResult> Delete(Guid? id)
+        public async Task<IActionResult> Delete(Guid? countryId)
         {
-            if (id == null || _context.Countries == null)
+            if (countryId == null || _context.Countries == null)
             {
                 return NotFound();
             }
 
-            var country = await _context.Countries
-                .FirstOrDefaultAsync(m => m.Id == id);
+            Country country = await _context.Countries
+                .Include(c => c.States)
+                .FirstOrDefaultAsync(c => c.Id == countryId);
             if (country == null)
             {
                 return NotFound();
@@ -155,9 +159,11 @@ namespace EduOnline.Controllers
         {
             if (_context.Countries == null)
             {
-                return Problem("Entity set 'DatabaseContext.Countries'  is null.");
+                return Problem("Entity set 'DatabaseContext.Countries' is null.");
             }
-            var country = await _context.Countries.FindAsync(id);
+            var country = await _context.Countries
+                .Include(c => c.States)
+                .FirstOrDefaultAsync(c => c.Id == id);
             if (country != null)
             {
                 _context.Countries.Remove(country);
@@ -170,6 +176,71 @@ namespace EduOnline.Controllers
         private bool CountryExists(Guid id)
         {
           return _context.Countries.Any(e => e.Id == id);
+        }
+
+        #endregion
+
+        #region State Actions
+        [HttpGet]
+        public async Task<IActionResult> AddState(Guid? countryId)
+        {
+            if (countryId == null)
+            {
+                return NotFound();
+            }
+
+            Country country = await _context.Countries.FindAsync(countryId);
+            if (country == null)
+            {
+                return NotFound();
+            }
+
+            StateViewModel stateViewModel = new()
+            {
+                CountryId = country.Id,
+            };
+
+            return View(stateViewModel);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AddState(StateViewModel stateViewModel)
+        {
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    State state = new State()
+                    {
+                        Cities = new List<City>(),
+                        Country = await _context.Countries.FindAsync(stateViewModel.CountryId),
+                        Name = stateViewModel.Name,
+                        CreatedDate = stateViewModel.CreatedDate,
+                        ModifiedDate = DateTime.Now,
+                    };
+
+                    _context.Add(state);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Details), new { Id = stateViewModel.CountryId });
+                }
+                catch (DbUpdateException dbUpdateException)
+                {
+                    if (dbUpdateException.InnerException.Message.Contains("duplicate"))
+                    {
+                        ModelState.AddModelError(string.Empty, "Ya existe un Dpto/Estado con el mismo nombre en este país.");
+                    }
+                    else
+                    {
+                        ModelState.AddModelError(string.Empty, dbUpdateException.InnerException.Message);
+                    }
+                }
+                catch (Exception exception)
+                {
+                    ModelState.AddModelError(string.Empty, exception.Message);
+                }
+            }
+            return View(stateViewModel);
         }
 
         #endregion

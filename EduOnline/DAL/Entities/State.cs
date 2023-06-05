@@ -13,5 +13,6 @@ namespace EduOnline.DAL.Entities
         public Country Country { get; set; }
 
         public ICollection<City> Cities { get; set; }
+
     }
 }
