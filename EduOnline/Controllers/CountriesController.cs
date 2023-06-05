@@ -27,24 +27,7 @@ namespace EduOnline.Controllers
         {
               return View(await _context.Countries.ToListAsync());
         }
-
-        public async Task<IActionResult> Details(Guid? id)
-        {
-            if (id == null || _context.Countries == null)
-            {
-                return NotFound();
-            }
-
-            var country = await _context.Countries
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (country == null)
-            {
-                return NotFound();
-            }
-
-            return View(country);
-        }
-
+                
         public IActionResult Create()
         {
             return View();
@@ -52,14 +35,31 @@ namespace EduOnline.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Name,Id,CreatedDate,ModifiedDate")] Country country)
+        public async Task<IActionResult> Create(Country country)
         {
             if (ModelState.IsValid)
             {
-                country.Id = Guid.NewGuid();
                 _context.Add(country);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                try
+                {
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
+                }
+                catch (DbUpdateException dbUpdateException)
+                {
+                    if (dbUpdateException.InnerException.Message.Contains("duplicate"))
+                    {
+                        ModelState.AddModelError(string.Empty, "Ya existe un país con el mismo nombre.");
+                    }
+                    else
+                    {
+                        ModelState.AddModelError(string.Empty, dbUpdateException.InnerException.Message);
+                    }
+                }
+                catch (Exception exception)
+                {
+                    ModelState.AddModelError(string.Empty, exception.Message);
+                }
             }
             return View(country);
         }
@@ -81,7 +81,7 @@ namespace EduOnline.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("Name,Id,CreatedDate,ModifiedDate")] Country country)
+        public async Task<IActionResult> Edit(Guid id, Country country)
         {
             if (id != country.Id)
             {
@@ -94,20 +94,41 @@ namespace EduOnline.Controllers
                 {
                     _context.Update(country);
                     await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
                 }
-                catch (DbUpdateConcurrencyException)
+                catch (DbUpdateException dbUpdateException)
                 {
-                    if (!CountryExists(country.Id))
+                    if (dbUpdateException.InnerException.Message.Contains("duplicate"))
                     {
-                        return NotFound();
+                        ModelState.AddModelError(string.Empty, "Ya existe un país con el mismo nombre.");
                     }
                     else
                     {
-                        throw;
+                        ModelState.AddModelError(string.Empty, dbUpdateException.InnerException.Message);
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                catch (Exception exception)
+                {
+                    ModelState.AddModelError(string.Empty, exception.Message);
+                }
             }
+            return View(country);
+        }
+
+        public async Task<IActionResult> Details(Guid? id)
+        {
+            if (id == null || _context.Countries == null)
+            {
+                return NotFound();
+            }
+
+            var country = await _context.Countries
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (country == null)
+            {
+                return NotFound();
+            }
+
             return View(country);
         }
 
