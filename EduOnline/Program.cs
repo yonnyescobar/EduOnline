@@ -14,6 +14,8 @@ builder.Services.AddDbContext<DatabaseContext>(o =>
 
 #endregion
 
+builder.Services.AddRazorPages().AddRazorRuntimeCompilation();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
