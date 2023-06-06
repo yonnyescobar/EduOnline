@@ -7,9 +7,12 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using EduOnline.DAL;
 using EduOnline.DAL.Entities;
+using Microsoft.AspNetCore.Authorization;
+using System.Data;
 
 namespace EduOnline.Controllers
 {
+    [Authorize(Roles = "Administrador")]
     public class CategoriesController : Controller
     {
         #region Dependencies & Properties

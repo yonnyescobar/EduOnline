@@ -1,4 +1,5 @@
 ﻿using EduOnline.DAL.Entities;
+using EduOnline.Models;
 using Microsoft.AspNetCore.Identity;
 
 namespace EduOnline.Helpers
@@ -14,5 +15,9 @@ namespace EduOnline.Helpers
         Task AddUserToRoleAsync(User user, string roleName);
 
         Task<bool> IsUserInRoleAsync(User user, string roleName);
+
+        Task<SignInResult> LoginAsync(LoginViewModel loginViewModel);
+
+        Task LogoutAsync();
     }
 }

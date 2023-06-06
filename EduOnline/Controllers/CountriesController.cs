@@ -8,9 +8,11 @@ using Microsoft.EntityFrameworkCore;
 using EduOnline.DAL;
 using EduOnline.DAL.Entities;
 using EduOnline.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace EduOnline.Controllers
 {
+    [Authorize(Roles = "Administrador")]
     public class CountriesController : Controller
     {
         #region Dependencies & Properties

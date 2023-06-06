@@ -33,6 +33,7 @@ builder.Services.AddIdentity<User, IdentityRole>(io =>
 builder.Services.ConfigureApplicationCookie(options =>
 {
     options.LoginPath = "/Account/Unauthorized";
+    options.AccessDeniedPath = "/Account/Unauthorized";
 });
 
 builder.Services.AddRazorPages().AddRazorRuntimeCompilation();
