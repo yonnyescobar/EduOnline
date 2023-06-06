@@ -40,7 +40,56 @@ namespace EduOnline.Services
 
             return listCategories;
         }
-               
+
+        public async Task<IEnumerable<SelectListItem>> GetDDLLanguagesAsync()
+        {
+            List<SelectListItem> listLanguages = await _context.Languages
+                .Select(l => new SelectListItem
+                {
+                    Text = l.Name, 
+                    Value = l.Id.ToString(),                    
+                })
+                .OrderBy(l => l.Text)
+                .ToListAsync();
+
+            listLanguages.Insert(0, new SelectListItem
+            {
+                Text = "Seleccione un idioma...",
+                Value = Guid.Empty.ToString(), 
+                Selected = true 
+            });
+
+            return listLanguages;
+        }
+
+        public async Task<IEnumerable<SelectListItem>> GetDDLLanguagesAsync(IEnumerable<Language> filterLanguages)
+        {
+            List<Language> languages = await _context.Languages.ToListAsync(); //me traigo TODAS las categorías que tengo guardadas en BD
+            List<Language> languagesFiltered = new(); //aquí declaro una lista vacía que es la que tendrá los filtros
+
+            foreach (Language language in languages)
+                if (!filterLanguages.Any(l => l.Id == language.Id))
+                    languagesFiltered.Add(language);
+
+            List<SelectListItem> listLanguages = languagesFiltered
+                .Select(l => new SelectListItem
+                {
+                    Text = l.Name, //Col
+                    Value = l.Id.ToString(), //Guid                    
+                })
+                .OrderBy(l => l.Text)
+                .ToList();
+
+            listLanguages.Insert(0, new SelectListItem
+            {
+                Text = "Seleccione un idioma...",
+                Value = Guid.Empty.ToString(),
+                Selected = true
+            });
+
+            return listLanguages;
+        }
+
         public async Task<IEnumerable<SelectListItem>> GetDDLCountriesAsync()
         {
             List<SelectListItem> listCountries = await _context.Countries
