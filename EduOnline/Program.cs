@@ -38,6 +38,7 @@ builder.Services.ConfigureApplicationCookie(options =>
 builder.Services.AddRazorPages().AddRazorRuntimeCompilation();
 
 builder.Services.AddScoped<IUserHelper, UserHelper>();
+builder.Services.AddScoped<IDropDownListsHelper, DropDownListsHelper>();
 
 var app = builder.Build();
 
