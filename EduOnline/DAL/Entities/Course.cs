@@ -41,11 +41,11 @@ namespace EduOnline.DAL.Entities
         public Category Category { get; set; }
 
         [Display(Name = "Imagen")]
-        public Guid ImageId { get; set; }
+        public ICollection<CourseImage> CourseImages { get; set; }
 
         [Display(Name = "Imagen")]
-        public string ImageFullPath => ImageId == Guid.Empty
+        public string ImageFullPath => CourseImages == null || CourseImages.Count == 0
             ? $"https://localhost:7217/images/NoImage.png"
-            : $"https://sales2023.blob.core.windows.net/products/{ImageId}";
+            : CourseImages.FirstOrDefault().ImageFullPath;
     }
 }

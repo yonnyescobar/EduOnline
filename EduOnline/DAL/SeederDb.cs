@@ -222,7 +222,7 @@ namespace EduOnline.DAL
                 Price = price,
                 Language = language,
                 Category = _context.Categories.FirstOrDefault(),
-                ImageId = imageId,
+                //ImageId = imageId,
                 CreatedDate = DateTime.Now
             };
 
