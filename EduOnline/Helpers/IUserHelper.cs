@@ -26,5 +26,7 @@ namespace EduOnline.Helpers
 
         Task<IdentityResult> UpdateUserAsync(User user);
 
+        Task<IdentityResult> ChangePasswordAsync(User user, string currentPassword, string newPassword);
+
     }
 }
