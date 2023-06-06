@@ -138,6 +138,7 @@ namespace EduOnline.DAL
 
                         new State
                         {
+                            CreatedDate = DateTime.Now,
                             Name = "Estado de Bahía",
                             Cities = new List<City>()
                             {

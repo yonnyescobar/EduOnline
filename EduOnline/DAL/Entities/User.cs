@@ -15,6 +15,7 @@ namespace EduOnline.DAL.Entities
         [Display(Name = "Documento")]
         [MaxLength(20, ErrorMessage = "El campo {0} debe tener máximo {1} caracteres.")]
         [Required(ErrorMessage = "El campo {0} es obligatorio.")]
+        [RegularExpression(@"^\d+$", ErrorMessage = "El campo {0} solo permite datos numéricos.")]
         public string Document { get; set; }
 
         [Display(Name = "Nombres")]

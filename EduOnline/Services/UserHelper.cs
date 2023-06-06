@@ -32,6 +32,30 @@ namespace EduOnline.Services
             return await _userManager.CreateAsync(user, password);
         }
 
+        public async Task<User> AddUserAsync(AddUserViewModel addUserViewModel)
+        {
+            User user = new()
+            {
+                Document = addUserViewModel.Document,
+                Email = addUserViewModel.Username,
+                FirstName = addUserViewModel.FirstName,
+                LastName = addUserViewModel.LastName,
+                PhotoId = addUserViewModel.PhotoId,
+                PhoneNumber = addUserViewModel.PhoneNumber,
+                City = await _context.Cities.FindAsync(addUserViewModel.CityId),
+                UserName = addUserViewModel.Username,
+                UserType = addUserViewModel.UserType
+            };
+
+            IdentityResult result = await _userManager.CreateAsync(user, addUserViewModel.Password);
+
+            if (result != IdentityResult.Success) return null;
+
+            User newUser = await GetUserAsync(addUserViewModel.Username);
+            await AddUserToRoleAsync(newUser, user.UserType.ToString());
+            return newUser;
+        }
+
         public async Task AddUserToRoleAsync(User user, string roleName)
         {
             await _userManager.AddToRoleAsync(user, roleName);
@@ -47,7 +71,18 @@ namespace EduOnline.Services
         {
             return await _context.Users
                  .Include(u => u.City)
+                 .ThenInclude(c => c.State)
+                 .ThenInclude(s => s.Country)
                  .FirstOrDefaultAsync(u => u.Email == email);
+        }
+
+        public async Task<User> GetUserAsync(Guid userId)
+        {
+            return await _context.Users
+             .Include(u => u.City)
+             .ThenInclude(c => c.State)
+             .ThenInclude(s => s.Country)
+             .FirstOrDefaultAsync(u => u.Id == userId.ToString());
         }
 
         public async Task<bool> IsUserInRoleAsync(User user, string roleName)
