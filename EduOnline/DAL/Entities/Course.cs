@@ -37,9 +37,9 @@ namespace EduOnline.DAL.Entities
         [Required(ErrorMessage = "El campo {0} es obligatorio.")]
         public string Language { get; set; }
 
-        [Display(Name = "Categoría")]
-        public Category Category { get; set; }
-
+        [Display(Name = "Categorías")]
+        public ICollection<CourseCategory> CourseCategories { get; set; }
+                
         [Display(Name = "Imagen")]
         public ICollection<CourseImage> CourseImages { get; set; }
 

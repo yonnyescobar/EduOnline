@@ -31,7 +31,7 @@ namespace EduOnline.Controllers
         public async Task<IActionResult> Index()
         {
             return View(await _context.Courses
-                .Include(c => c.Category)              
+                .Include(c => c.CourseImages)              
                 .ToListAsync());
         }
 
@@ -155,7 +155,7 @@ namespace EduOnline.Controllers
             if (courseId == null) return NotFound();
 
             Course course = await _context.Courses
-                .Include(c => c.Category)                
+                .Include(c => c.CourseImages)                
                 .FirstOrDefaultAsync(c => c.Id == courseId);
             if (course == null) return NotFound();
 

@@ -200,19 +200,16 @@ namespace EduOnline.DAL
         {
             if(!_context.Courses.Any())
             {
-                await AddCourseAsync("Java Script, HTML 5 y CSS3", "Aprenda JavaScript sin que sea programador", "Conocimientos generales de páginas web y computación", "1 mes", 104900M, "Inglés", "DesarrolloWeb1.png");                
-                await AddCourseAsync("Tomcat para Administradores y desarrolladores", "Aprenderás a utilizar Tomcat 9", "Muchas ganas de aprender", "3 Semanas", 60000M, "Español", "DesarrolloWeb2.png");
-                await AddCourseAsync("Angular", "Vas a dominar el framework Angular", "Muchas ganas de aprender", "3 Horas", 60000M, "Español", "DesarrolloWeb3.png");
-                await AddCourseAsync("PHP 8 y MYSQL", "Al final del curso serás capaz de crear cualquier Aplicación o Sitio web", "Una computadora con conexión a internet", "2 Meses", 330000M, "Inglés", "DesarrolloWeb4.png");
-                await AddCourseAsync("JavaScript", "Iniciaremos desde los principios básicos", "Conocimientos básicos de HTML y CSS", "1 Semana", 75000M, "Español", "DesarrolloWeb5.png");
+                await AddCourseAsync("Java Script, HTML 5 y CSS3", "Aprenda JavaScript sin que sea programador", "Conocimientos generales de páginas web y computación", "1 mes", 104900M, "Inglés", new List<string> { "Desarrollo Web" }, new List<string> { "DesarrolloWeb1.png" });                
+                await AddCourseAsync("Tomcat para Administradores y desarrolladores", "Aprenderás a utilizar Tomcat 9", "Muchas ganas de aprender", "3 Semanas", 60000M, "Español", new List<string> { "Desarrollo Web" }, new List<string> { "DesarrolloWeb2.png" });
+                await AddCourseAsync("Angular", "Vas a dominar el framework Angular", "Muchas ganas de aprender", "3 Horas", 60000M, "Español", new List<string> { "Desarrollo Web" }, new List<string> { "DesarrolloWeb3.png" });
+                await AddCourseAsync("PHP 8 y MYSQL", "Al final del curso serás capaz de crear cualquier Aplicación o Sitio web", "Una computadora con conexión a internet", "2 Meses", 330000M, "Inglés", new List<string> { "Desarrollo Web" }, new List<string> { "DesarrolloWeb4.png" });
+                await AddCourseAsync("JavaScript", "Iniciaremos desde los principios básicos", "Conocimientos básicos de HTML y CSS", "1 Semana", 75000M, "Español", new List<string> { "Desarrollo Web" }, new List<string> { "DesarrolloWeb5.png" });
             }
         }
 
-        private async Task AddCourseAsync(string name, string description, string requeriments, string duration, decimal price, string language, string image)
-        {
-            Guid imageId = await _azureBlobHelper.UploadAzureBlobAsync
-                ($"{Environment.CurrentDirectory}\\wwwroot\\images\\courses\\{image}", "products");
-
+        private async Task AddCourseAsync(string name, string description, string requeriments, string duration, decimal price, string language, List<string> categories, List<string> images)
+        {           
             Course course = new()
             {
                 Name = name,
@@ -221,12 +218,23 @@ namespace EduOnline.DAL
                 Duration = duration,
                 Price = price,
                 Language = language,
-                Category = _context.Categories.FirstOrDefault(),
-                //ImageId = imageId,
+                CourseCategories = new List<CourseCategory>(),
+                CourseImages = new List<CourseImage>(),
                 CreatedDate = DateTime.Now
             };
 
-            
+            foreach (string? category in categories)
+            {
+                course.CourseCategories.Add(new CourseCategory { Category = await _context.Categories.FirstOrDefaultAsync(c => c.Name == category) });
+            }
+
+
+            foreach (string? image in images)
+            {
+                Guid imageId = await _azureBlobHelper.UploadAzureBlobAsync($"{Environment.CurrentDirectory}\\wwwroot\\images\\courses\\{image}", "products");
+                course.CourseImages.Add(new CourseImage { ImageId = imageId });
+            }
+
             _context.Courses.Add(course);
         }
     }

@@ -37,9 +37,9 @@
                             <th>
                                 @Html.DisplayNameFor(model => model.Price)
                             </th>                            
-                            <th>
+                            @*<th>
                                 @Html.DisplayNameFor(model => model.Category.Name)
-                            </th>                            
+                            </th> *@                           
                             <th></th>
                         </tr>
                     </thead>
@@ -65,9 +65,9 @@
                                 <td>
                                     @Html.DisplayFor(modelItem => item.Price)
                                 </td>
-                                <td>
+                                @*<td>
                                     @Html.DisplayFor(modelItem => item.Category.Name)
-                                </td>
+                                </td>*@
                                 <td>
                                     <a asp-action="Edit" asp-route-courseId="@item.Id" class="btn btn-outline-warning">Editar</a>
                                     <a asp-action="Details" asp-route-courseId="@item.Id" class="btn btn-outline-info">Detalles</a>
