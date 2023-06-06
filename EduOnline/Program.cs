@@ -39,6 +39,7 @@ builder.Services.AddRazorPages().AddRazorRuntimeCompilation();
 
 builder.Services.AddScoped<IUserHelper, UserHelper>();
 builder.Services.AddScoped<IDropDownListsHelper, DropDownListsHelper>();
+builder.Services.AddScoped<IAzureBlobHelper, AzureBlobHelper>();
 
 var app = builder.Build();
 
