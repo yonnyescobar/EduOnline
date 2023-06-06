@@ -9,6 +9,9 @@ namespace EduOnline.DAL.Entities
         [Required(ErrorMessage = "El campo {0} es obligatorio.")]
         public string Name { get; set; }
 
-        public ICollection<Course> Courses { get; set; }
+        public ICollection<CourseCategory> CourseCategories { get; set; }
+
+        [Display(Name = "Cursos")]
+        public int CoursesNumber => CourseCategories == null ? 0 : CourseCategories.Count;
     }
 }
