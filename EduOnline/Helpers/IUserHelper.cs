@@ -8,6 +8,8 @@ namespace EduOnline.Helpers
     {
         Task<User> GetUserAsync(string email);
 
+        Task<User> GetUserAsync(Guid userId);
+
         Task<IdentityResult> AddUserAsync(User user, string password);
 
         Task<User> AddUserAsync(AddUserViewModel addUserViewModel);
@@ -22,6 +24,7 @@ namespace EduOnline.Helpers
 
         Task LogoutAsync();
 
-        Task<User> GetUserAsync(Guid userId);
+        Task<IdentityResult> UpdateUserAsync(User user);
+
     }
 }

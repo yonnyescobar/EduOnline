@@ -27,6 +27,24 @@ namespace EduOnline.Services
 
         #region Methods
 
+        public async Task<User> GetUserAsync(string email)
+        {
+            return await _context.Users
+                 .Include(u => u.City)
+                 .ThenInclude(c => c.State)
+                 .ThenInclude(s => s.Country)
+                 .FirstOrDefaultAsync(u => u.Email == email);
+        }
+
+        public async Task<User> GetUserAsync(Guid userId)
+        {
+            return await _context.Users
+             .Include(u => u.City)
+             .ThenInclude(c => c.State)
+             .ThenInclude(s => s.Country)
+             .FirstOrDefaultAsync(u => u.Id == userId.ToString());
+        }
+
         public async Task<IdentityResult> AddUserAsync(User user, string password)
         {
             return await _userManager.CreateAsync(user, password);
@@ -67,24 +85,6 @@ namespace EduOnline.Services
             if (!roleExists) await _roleManager.CreateAsync(new IdentityRole { Name = roleName });
         }
 
-        public async Task<User> GetUserAsync(string email)
-        {
-            return await _context.Users
-                 .Include(u => u.City)
-                 .ThenInclude(c => c.State)
-                 .ThenInclude(s => s.Country)
-                 .FirstOrDefaultAsync(u => u.Email == email);
-        }
-
-        public async Task<User> GetUserAsync(Guid userId)
-        {
-            return await _context.Users
-             .Include(u => u.City)
-             .ThenInclude(c => c.State)
-             .ThenInclude(s => s.Country)
-             .FirstOrDefaultAsync(u => u.Id == userId.ToString());
-        }
-
         public async Task<bool> IsUserInRoleAsync(User user, string roleName)
         {
             return await _userManager.IsInRoleAsync(user, roleName);
@@ -98,6 +98,11 @@ namespace EduOnline.Services
         public async Task LogoutAsync()
         {
             await _signInManager.SignOutAsync();
+        }
+
+        public async Task<IdentityResult> UpdateUserAsync(User user)
+        {
+            return await _userManager.UpdateAsync(user);
         }
 
         #endregion
