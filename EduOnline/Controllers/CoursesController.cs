@@ -31,7 +31,9 @@ namespace EduOnline.Controllers
         public async Task<IActionResult> Index()
         {
             return View(await _context.Courses
-                .Include(c => c.CourseImages)              
+                .Include(c => c.CourseImages)
+                .Include(c => c.CourseCategories)
+                .ThenInclude(cc => cc.Category)
                 .ToListAsync());
         }
 
@@ -58,8 +60,6 @@ namespace EduOnline.Controllers
                     if (addCourseViewModel.ImageFile != null)
                         imageId = await _azureBlobHelper.UploadAzureBlobAsync(addCourseViewModel.ImageFile, "products");
 
-                    addCourseViewModel.ImageId = imageId;
-
                     Course course = new()
                     {
                         Name = addCourseViewModel.Name,
@@ -70,6 +70,22 @@ namespace EduOnline.Controllers
                         CreatedDate = DateTime.Now
                     };
 
+                    course.CourseCategories = new List<CourseCategory>()
+                    {
+                        new CourseCategory
+                        {
+                            Category = await _context.Categories.FindAsync(addCourseViewModel.CategoryId)
+                        }
+                    };
+
+                    if (imageId != Guid.Empty)
+                    {
+                        course.CourseImages = new List<CourseImage>()
+                        {
+                            new CourseImage { ImageId = imageId }
+                        };
+                    }
+
                     _context.Add(course);
                     await _context.SaveChangesAsync();
                     return RedirectToAction(nameof(Index));
@@ -78,7 +94,7 @@ namespace EduOnline.Controllers
                 {
                     if (dbUpdateException.InnerException.Message.Contains("duplicate"))
                     {
-                        ModelState.AddModelError(string.Empty, "Ya existe un producto con el mismo nombre.");
+                        ModelState.AddModelError(string.Empty, "Ya existe un curso con el mismo nombre.");
                     }
                     else
                     {
@@ -156,6 +172,8 @@ namespace EduOnline.Controllers
 
             Course course = await _context.Courses
                 .Include(c => c.CourseImages)                
+                .Include(c => c.CourseCategories)
+                .ThenInclude(cc => cc.Category)
                 .FirstOrDefaultAsync(c => c.Id == courseId);
             if (course == null) return NotFound();
 

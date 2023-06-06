@@ -40,7 +40,35 @@ namespace EduOnline.Services
 
             return listCategories;
         }
-        
+
+        public async Task<IEnumerable<SelectListItem>> GetDDLCategoriesAsync(IEnumerable<Category> filterCategories)
+        {
+            List<Category> categories = await _context.Categories.ToListAsync(); 
+            List<Category> categoriesFiltered = new(); 
+
+            foreach (Category category in categories)
+                if (!filterCategories.Any(c => c.Id == category.Id))
+                    categoriesFiltered.Add(category);
+
+            List<SelectListItem> listCategories = categoriesFiltered
+                .Select(c => new SelectListItem
+                {
+                    Text = c.Name,
+                    Value = c.Id.ToString(),               
+                })
+                .OrderBy(c => c.Text)
+                .ToList();
+
+            listCategories.Insert(0, new SelectListItem
+            {
+                Text = "Seleccione una categoría...",
+                Value = Guid.Empty.ToString(),
+                Selected = true
+            });
+
+            return listCategories;
+        }
+
         public async Task<IEnumerable<SelectListItem>> GetDDLCountriesAsync()
         {
             List<SelectListItem> listCountries = await _context.Countries
