@@ -3,7 +3,9 @@ using EduOnline.DAL.Entities;
 using EduOnline.Helpers;
 using EduOnline.Services;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
+using System.Globalization;
 using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -37,6 +39,18 @@ builder.Services.ConfigureApplicationCookie(options =>
 {
     options.LoginPath = "/Account/Unauthorized";
     options.AccessDeniedPath = "/Account/Unauthorized";
+});
+
+var supportedCultures = new[]
+{
+    new CultureInfo("es-CO"),
+};
+
+builder.Services.Configure<RequestLocalizationOptions>(options =>
+{
+    options.DefaultRequestCulture = new RequestCulture("es-CO");
+    options.SupportedCultures = supportedCultures;
+    options.SupportedUICultures = supportedCultures;
 });
 
 builder.Services.AddRazorPages().AddRazorRuntimeCompilation();
