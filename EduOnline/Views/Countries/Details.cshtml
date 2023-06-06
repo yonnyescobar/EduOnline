@@ -4,15 +4,17 @@
     ViewData["Title"] = "Details";
 }
 
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.3/css/jquery.dataTables.min.css" />
+
 <h1>Detalles</h1>
 
 <div>
     <partial name="../Shared/PartialViews/_CountryDetailsDelete.cshtml" />
 </div>
 <div>
-    <a asp-action="AddState" asp-route-id="@Model?.Id" class="btn btn-outline-primary">Nuevo Estado</a>
+    <a asp-action="AddState" asp-route-countryId="@Model?.Id" class="btn btn-outline-primary">Agregar Estado</a>
     <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-outline-warning">Editar</a>
-    <a asp-action="Index" class="btn btn-outline-success">Regresar</a>
+    <a asp-action="Index" class="btn btn-outline-success">Cancelar</a>
 </div>
 <hr />
 <div class="row">
