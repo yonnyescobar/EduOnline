@@ -12,7 +12,11 @@ namespace EduOnline.DAL.Entities
         [Display(Name = "País")]
         public Country Country { get; set; }
 
+        [Display(Name = "Ciudades")]
         public ICollection<City> Cities { get; set; }
+
+        [Display(Name = "Número Ciudades")]
+        public int CitiesNumber => Cities == null ? 0 : Cities.Count; 
 
     }
 }
