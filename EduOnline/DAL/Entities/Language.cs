@@ -9,6 +9,6 @@ namespace EduOnline.DAL.Entities
         [Required(ErrorMessage = "El campo {0} es obligatorio.")]
         public string Name { get; set; }
 
-        public ICollection<Language> CourseLanguages { get; set;}
+        public ICollection<CourseLanguage> CourseLanguages { get; set;}
     }
 }
