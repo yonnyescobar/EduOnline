@@ -40,6 +40,7 @@ namespace EduOnline.Controllers
         {
             if (ModelState.IsValid)
             {
+                category.CreatedDate = DateTime.Now;
                 _context.Add(category);
                 try
                 {
@@ -87,6 +88,7 @@ namespace EduOnline.Controllers
             {
                 try
                 {
+                    category.ModifiedDate = DateTime.Now;
                     _context.Update(category);
                     await _context.SaveChangesAsync();
                     return RedirectToAction(nameof(Index));
