@@ -8,5 +8,7 @@ namespace EduOnline.DAL.Entities
         [MaxLength(50, ErrorMessage = "El campo {0} debe ser de {1} caracteres.")]
         [Required(ErrorMessage = "El campo {0} es obligatorio.")]
         public string Name { get; set; }
+
+        public ICollection<Course> Courses { get; set; }
     }
 }
