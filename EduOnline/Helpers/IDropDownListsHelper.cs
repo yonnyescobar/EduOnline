@@ -6,9 +6,7 @@ namespace EduOnline.Helpers
     public interface IDropDownListsHelper
     {
         Task<IEnumerable<SelectListItem>> GetDDLCategoriesAsync();
-        Task<IEnumerable<SelectListItem>> GetDDLLanguagesAsync();
-        Task<IEnumerable<SelectListItem>> GetDDLLanguagesAsync(IEnumerable<Language> filterLanguages);
-
+        
         Task<IEnumerable<SelectListItem>> GetDDLCountriesAsync();
 
         Task<IEnumerable<SelectListItem>> GetDDLStatesAsync(Guid countryId);

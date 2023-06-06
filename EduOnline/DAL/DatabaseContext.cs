@@ -16,8 +16,9 @@ namespace EduOnline.DAL
         public DbSet<State> States { get; set; }
         public DbSet<City> Cities { get; set; }
         public DbSet<Course> Courses { get; set; }
-        public DbSet<CourseLanguage> CourseLanguages { get; set; }
-        public DbSet<Language> Languages { get; set; }
+        public DbSet<CourseCategory> CourseCategories { get; set; }
+        public DbSet<CourseImage> CourseImages { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -27,8 +28,8 @@ namespace EduOnline.DAL
             modelBuilder.Entity<State>().HasIndex("Name", "CountryId").IsUnique();
             modelBuilder.Entity<City>().HasIndex("Name", "StateId").IsUnique();
             modelBuilder.Entity<Course>().HasIndex(c => c.Name).IsUnique();
-            modelBuilder.Entity<CourseLanguage>().HasIndex("CourseId", "LanguageId").IsUnique();
-            modelBuilder.Entity<Language>().HasIndex(l => l.Name).IsUnique();
+            modelBuilder.Entity<CourseCategory>().HasIndex("CourseId", "CategoryId").IsUnique();
+
         }
     }
 }

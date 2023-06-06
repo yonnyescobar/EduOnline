@@ -26,7 +26,6 @@ namespace EduOnline.DAL
             await PopulateRolesAsync();
             await PopulateUserAsync("Admin", "Local", "admin_local@yopmail.com", "3002323232", "102030", "NoPhoto.png", UserType.Administrador);
             await PopulateUserAsync("Estudiante", "Local", "estudiante_local@yopmail.com", "4005656656", "405060", "NoPhoto.png", UserType.Estudiante);
-            await PopulateLanguagesAsync();
             await PopulateCoursesAsync();
 
             await _context.SaveChangesAsync();
@@ -197,31 +196,19 @@ namespace EduOnline.DAL
             }
         }
 
-        private async Task PopulateLanguagesAsync()
-        {
-            if(!_context.Languages.Any())
-            {
-                _context.Languages.Add(new Language { Name = "Inglés", CreatedDate = DateTime.Now });
-                _context.Languages.Add(new Language { Name = "Español", CreatedDate = DateTime.Now });
-                _context.Languages.Add(new Language { Name = "Frances", CreatedDate = DateTime.Now });
-                _context.Languages.Add(new Language { Name = "Alemán", CreatedDate = DateTime.Now });
-                _context.Languages.Add(new Language { Name = "Portugués", CreatedDate = DateTime.Now });
-            }
-        }
-
         private async Task PopulateCoursesAsync()
         {
             if(!_context.Courses.Any())
             {
-                await AddCourseAsync("Java Script, HTML 5 y CSS3", "Aprenda JavaScript sin que sea programador", "Conocimientos generales de páginas web y computación", "1 mes", 104900M, new List<string>() { "Inglés" }, "DesarrolloWeb1.png");                
-                await AddCourseAsync("Tomcat para Administradores y desarrolladores", "Aprenderás a utilizar Tomcat 9", "Muchas ganas de aprender", "3 Semanas", 60000M, new List<string>() { "Español" }, "DesarrolloWeb2.png");
-                await AddCourseAsync("Angular", "Vas a dominar el framework Angular", "Muchas ganas de aprender", "3 Horas", 60000M, new List<string>() { "Español" }, "DesarrolloWeb3.png");
-                await AddCourseAsync("PHP 8 y MYSQL", "Al final del curso serás capaz de crear cualquier Aplicación o Sitio web", "Una computadora con conexión a internet", "2 Meses", 330000M, new List<string>() { "Inglés" }, "DesarrolloWeb4.png");
-                await AddCourseAsync("JavaScript", "Iniciaremos desde los principios básicos", "Conocimientos básicos de HTML y CSS", "1 Semana", 75000M, new List<string>() { "Español" }, "DesarrolloWeb5.png");
+                await AddCourseAsync("Java Script, HTML 5 y CSS3", "Aprenda JavaScript sin que sea programador", "Conocimientos generales de páginas web y computación", "1 mes", 104900M, "Inglés", "DesarrolloWeb1.png");                
+                await AddCourseAsync("Tomcat para Administradores y desarrolladores", "Aprenderás a utilizar Tomcat 9", "Muchas ganas de aprender", "3 Semanas", 60000M, "Español", "DesarrolloWeb2.png");
+                await AddCourseAsync("Angular", "Vas a dominar el framework Angular", "Muchas ganas de aprender", "3 Horas", 60000M, "Español", "DesarrolloWeb3.png");
+                await AddCourseAsync("PHP 8 y MYSQL", "Al final del curso serás capaz de crear cualquier Aplicación o Sitio web", "Una computadora con conexión a internet", "2 Meses", 330000M, "Inglés", "DesarrolloWeb4.png");
+                await AddCourseAsync("JavaScript", "Iniciaremos desde los principios básicos", "Conocimientos básicos de HTML y CSS", "1 Semana", 75000M, "Español", "DesarrolloWeb5.png");
             }
         }
 
-        private async Task AddCourseAsync(string name, string description, string requeriments, string duration, decimal price, List<string> languages, string image)
+        private async Task AddCourseAsync(string name, string description, string requeriments, string duration, decimal price, string language, string image)
         {
             Guid imageId = await _azureBlobHelper.UploadAzureBlobAsync
                 ($"{Environment.CurrentDirectory}\\wwwroot\\images\\courses\\{image}", "products");
@@ -233,17 +220,13 @@ namespace EduOnline.DAL
                 Requirements = requeriments,
                 Duration = duration,
                 Price = price,
-                CourseLanguages = new List<CourseLanguage>(),
+                Language = language,
                 Category = _context.Categories.FirstOrDefault(),
                 ImageId = imageId,
                 CreatedDate = DateTime.Now
             };
 
-            foreach(string? language in languages)
-            { 
-                course.CourseLanguages.Add(new CourseLanguage { Language = await _context.Languages.FirstOrDefaultAsync(l => l.Name == language) });
-            }
-
+            
             _context.Courses.Add(course);
         }
     }

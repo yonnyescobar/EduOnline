@@ -35,7 +35,7 @@ namespace EduOnline.DAL.Entities
         [Display(Name = "Idioma")]
         [MaxLength(10, ErrorMessage = "El campo {0} debe tener máximo {1} caracteres.")]
         [Required(ErrorMessage = "El campo {0} es obligatorio.")]
-        public ICollection<CourseLanguage> CourseLanguages { get; set; }
+        public string Language { get; set; }
 
         [Display(Name = "Categoría")]
         public Category Category { get; set; }

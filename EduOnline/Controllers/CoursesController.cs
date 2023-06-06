@@ -31,9 +31,7 @@ namespace EduOnline.Controllers
         public async Task<IActionResult> Index()
         {
             return View(await _context.Courses
-                .Include(c => c.Category)
-                .Include(c => c.CourseLanguages)
-                .ThenInclude(cl => cl.Language)
+                .Include(c => c.Category)              
                 .ToListAsync());
         }
 
@@ -41,8 +39,7 @@ namespace EduOnline.Controllers
         {
             AddCourseViewModel addCourseViewModel = new()
             {
-                Categories = await _dropDownListsHelper.GetDDLCategoriesAsync(),
-                Languages = await _dropDownListsHelper.GetDDLLanguagesAsync(),
+                Categories = await _dropDownListsHelper.GetDDLCategoriesAsync(),                
             };
 
             return View(addCourseViewModel);
@@ -73,15 +70,6 @@ namespace EduOnline.Controllers
                         CreatedDate = DateTime.Now
                     };
 
-                    //Estoy capturando la categoría del prod para luego guardar esa relación en la tabla ProductCategories
-                    course.CourseLanguages = new List<CourseLanguage>()
-                    {
-                        new CourseLanguage
-                        {
-                            Language = await _context.Languages.FindAsync(addCourseViewModel.LanguageId)
-                        }
-                    };
-
                     _context.Add(course);
                     await _context.SaveChangesAsync();
                     return RedirectToAction(nameof(Index));
@@ -103,8 +91,7 @@ namespace EduOnline.Controllers
                 }
             }
 
-            addCourseViewModel.Categories = await _dropDownListsHelper.GetDDLCategoriesAsync();
-            addCourseViewModel.Languages = await _dropDownListsHelper.GetDDLLanguagesAsync();
+            addCourseViewModel.Categories = await _dropDownListsHelper.GetDDLCategoriesAsync();            
             return View(addCourseViewModel);
         }
 
@@ -168,9 +155,7 @@ namespace EduOnline.Controllers
             if (courseId == null) return NotFound();
 
             Course course = await _context.Courses
-                .Include(c => c.Category)
-                .Include(c => c.CourseLanguages)
-                .ThenInclude(cl=> cl.Language)
+                .Include(c => c.Category)                
                 .FirstOrDefaultAsync(c => c.Id == courseId);
             if (course == null) return NotFound();
 
