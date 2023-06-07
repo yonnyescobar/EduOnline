@@ -41,8 +41,11 @@ else
 			<div class="feature_text"><p>Estudia en línea</p></div>
 		</div>
 	</div>
-
-	<a asp-action="ShowCartAndConfirm" class="btn btn-outline-primary">Ver Carro de Compras</a>
+	
+	@if (User.Identity.IsAuthenticated)
+	{
+		<a asp-action="ShowCartAndConfirm" class="btn btn-outline-primary">Ver Carro de Compras</a>
+	}
 
 	@foreach (var group in Model.Courses.Select((item, index) => new { Item = item, Index = index })
 						.GroupBy(x => x.Index / 4))
