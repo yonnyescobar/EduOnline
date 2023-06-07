@@ -82,7 +82,7 @@
                                 <td>
                                     @Html.DisplayFor(modelItem => item.Quantity)
                                 </td>
-                                @*<td class="d-flex flex-column">
+                                <td class="d-flex flex-column">
                                     <a asp-action="IncreaseQuantity" asp-route-temporalOrderId="@item.Id" class="btn btn-primary mb-2">+</a>
                                     <br>
                                     @if (item.Quantity == 1)
@@ -93,7 +93,7 @@
                                     {
                                         <a asp-action="DecreaseQuantity" asp-route-temporalOrderId="@item.Id" class="btn btn-secondary">-</a>
                                     }
-                                </td>*@
+                                </td>
                                 <td>
                                     @Html.DisplayFor(modelItem => item.Value)
                                 </td>

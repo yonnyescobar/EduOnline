@@ -105,7 +105,40 @@ namespace EduOnline.Controllers
             }
 
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(ShowCartAndConfirm));
+        }
+
+        public async Task<IActionResult> IncreaseQuantity(Guid? temporalOrderId)
+        {
+            if (temporalOrderId == null) return NotFound();
+
+            TemporalOrder temporalOrder = await _context.TemporalOrders.FindAsync(temporalOrderId);
+            if (temporalOrder == null) return NotFound();
+
+            temporalOrder.ModifiedDate = DateTime.Now;
+            temporalOrder.Quantity++;
+            _context.TemporalOrders.Update(temporalOrder);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(ShowCartAndConfirm));
+        }
+
+        public async Task<IActionResult> DecreaseQuantity(Guid? temporalOrderId)
+        {
+            if (temporalOrderId == null) return NotFound();
+
+            TemporalOrder temporalOrder = await _context.TemporalOrders.FindAsync(temporalOrderId);
+            if (temporalOrder == null) return NotFound();
+
+            if (temporalOrder.Quantity > 1)
+            {
+                temporalOrder.ModifiedDate = DateTime.Now;
+                temporalOrder.Quantity--;
+                _context.TemporalOrders.Update(temporalOrder);
+                await _context.SaveChangesAsync();
+            }
+
+            return RedirectToAction(nameof(ShowCartAndConfirm));
         }
 
         public async Task<IActionResult> DetailsCourse(Guid? courseId)
