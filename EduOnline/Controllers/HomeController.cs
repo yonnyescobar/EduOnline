@@ -182,6 +182,18 @@ namespace EduOnline.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        public async Task<IActionResult> DeleteTemporalOrder(Guid? temporalOrderId)
+        {
+            if (temporalOrderId == null) return NotFound();
+
+            TemporalOrder temporalOrder = await _context.TemporalOrders.FindAsync(temporalOrderId);
+            if (temporalOrder == null) return NotFound();
+
+            _context.TemporalOrders.Remove(temporalOrder);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(ShowCartAndConfirm));
+        }
+
         [Authorize]
         public async Task<IActionResult> ShowCartAndConfirm()
         {
