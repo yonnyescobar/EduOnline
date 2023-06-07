@@ -18,6 +18,9 @@ namespace EduOnline.DAL
         public DbSet<Course> Courses { get; set; }
         public DbSet<CourseCategory> CourseCategories { get; set; }
         public DbSet<CourseImage> CourseImages { get; set; }
+        public DbSet<TemporalOrder> TemporalOrders { get; set; }
+        public DbSet<Order> Orders { get; set; }
+        public DbSet<OrderDetail> OrderDetails { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
