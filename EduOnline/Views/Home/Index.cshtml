@@ -4,19 +4,18 @@
     ViewData["Title"] = "Index";
 }
 
-@*@if (Model.Quantity > 0)
-{
-    <a asp-action="ShowCartAndConfirm" class="btn btn-outline-primary">Ver Carro de Compras (@Model.Quantity)</a>
-}*@
-
 @if (User.Identity.IsAuthenticated && User.IsInRole("Administrador"))
 {
     <div class="text-center">
-        <h1 class="display-4">@ViewBag.UserFullName a Educación en Línea</h1>
+        <h1 class="display-4"> Bienvenido @ViewBag.UserFullName a Educación en Línea</h1>
     </div>
 }
 else
 {
+    @if (Model.Quantity >= 0)
+    {
+        <a asp-action="ShowCartAndConfirm" class="btn btn-outline-primary">Ver Carro de Compras (@Model.Quantity)</a>
+    }
     <div style="text-align: center;">
         <h3>Cursos</h3>
     </div>

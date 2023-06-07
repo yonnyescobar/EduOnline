@@ -1,7 +1,9 @@
-﻿using EduOnline.DAL;
+﻿using EduOnline.Common;
+using EduOnline.DAL;
 using EduOnline.DAL.Entities;
 using EduOnline.Helpers;
 using EduOnline.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
@@ -13,11 +15,13 @@ namespace EduOnline.Controllers
         #region Dependencies & Properties
         private readonly DatabaseContext _context;
         private readonly IUserHelper _userHelper;
+        private readonly IOrderHelper _orderHelper;
 
-        public HomeController(DatabaseContext context, IUserHelper userHelper)
+        public HomeController(DatabaseContext context, IUserHelper userHelper, IOrderHelper orderHelper)
         {
             _context = context;
-            _userHelper = userHelper;            
+            _userHelper = userHelper;
+            _orderHelper = orderHelper;
         }
 
         #endregion
@@ -53,11 +57,6 @@ namespace EduOnline.Controllers
                  .Where(u => u.Email == User.Identity.Name)
                  .Select(u => u.FullName)
                  .FirstOrDefault();
-        }
-
-        public IActionResult Privacy()
-        {
-            return View();
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
@@ -144,6 +143,96 @@ namespace EduOnline.Controllers
             };
 
             return View(detailsCourseToCartViewModel);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DetailsCourse(DetailsCourseToCartViewModel detailsCourseToCartViewModel)
+        {
+            if (!User.Identity.IsAuthenticated) return RedirectToAction("Login", "Account");
+
+            Course course = await _context.Courses.FindAsync(detailsCourseToCartViewModel.Id);
+            User user = await _userHelper.GetUserAsync(User.Identity.Name);
+
+            if (course == null || user == null) return NotFound();
+
+            TemporalOrder existingTemporalOrder = await _context.TemporalOrders
+                .Where(t => t.Course.Id == detailsCourseToCartViewModel.Id && t.User.Id == user.Id)
+                .FirstOrDefaultAsync();
+
+            if (existingTemporalOrder != null)
+            {
+                existingTemporalOrder.Quantity += detailsCourseToCartViewModel.Quantity;
+                existingTemporalOrder.ModifiedDate = DateTime.Now;
+            }
+            else
+            {
+                TemporalOrder temporalOrder = new()
+                {
+                    CreatedDate = DateTime.Now,
+                    Course = course,
+                    Quantity = 1,
+                    User = user,
+                };
+
+                _context.TemporalOrders.Add(temporalOrder);
+            }
+
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
+
+        [Authorize]
+        public async Task<IActionResult> ShowCartAndConfirm()
+        {
+            User user = await _userHelper.GetUserAsync(User.Identity.Name);
+            if (user == null) return NotFound();
+
+            List<TemporalOrder>? temporalOrders = await _context.TemporalOrders
+                .Include(to => to.Course)
+                .ThenInclude(c => c.CourseImages)
+                .Where(to => to.User.Id == user.Id)
+                .ToListAsync();
+
+            ShowCartViewModel showCartViewModel = new()
+            {
+                User = user,
+                TemporalOrders = temporalOrders,
+            };
+
+            return View(showCartViewModel);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ShowCartAndConfirm(ShowCartViewModel showCartViewModel)
+        {
+            User user = await _userHelper.GetUserAsync(User.Identity.Name);
+            if (user == null) return NotFound();
+
+            showCartViewModel.User = user;
+            showCartViewModel.TemporalOrders = await _context.TemporalOrders
+                .Include(to => to.Course)
+                .ThenInclude(c => c.CourseImages)
+                .Where(to => to.User.Id == user.Id)
+            .ToListAsync();
+
+            Response response = await _orderHelper.ProcessOrderAsync(showCartViewModel);
+            if (response.IsSuccess) return RedirectToAction(nameof(OrderSuccess));
+
+            ModelState.AddModelError(string.Empty, response.Message);
+            return View(showCartViewModel);
+        }
+
+        [Authorize]
+        public IActionResult OrderSuccess()
+        {
+            return View();
+        }
+
+        public IActionResult Privacy()
+        {
+            return View();
         }
 
         #endregion
