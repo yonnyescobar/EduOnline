@@ -5,43 +5,86 @@
 }
 
 @if (User.Identity.IsAuthenticated && User.IsInRole("Administrador"))
-{
-    <div class="text-center">
-        <h1 class="display-4"> Bienvenido @ViewBag.UserFullName a Educación en Línea</h1>
-    </div>
+{	
+	<div class="features">
+		<div class="container">
+			<div class="row">
+				<div class="col">
+					<div class="section_title_container text-center">
+						<h2 class="section_title">Bienvenido @ViewBag.UserFullName a Educación en Línea</h2>
+						<div class="section_subtitle"><p>Gestionando la educación</p></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 }
 else
-{
-    <a asp-action="ShowCartAndConfirm" class="btn btn-outline-primary">Ver Carro de Compras</a>
+{	
+	<div class="features">
+		<div class="container">
+			<div class="row">
+				<div class="col">
+					<div class="section_title_container text-center">
+						<h2 class="section_title">Bienvenido a Educación en Línea</h2>
+						<div class="section_subtitle"><p>Conectados con el aprendizaje</p></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 
-    <div style="text-align: center;">
-        <h3>Cursos</h3>
-    </div>
+	<div class="col feature_col">
+		<div class="feature text-center trans_400">
+			<div class="feature_icon"><img src="images/icon_3.png" alt=""></div>
+			<h3 class="feature_title">Cursos</h3>
+			<div class="feature_text"><p>Estudia en línea</p></div>
+		</div>
+	</div>
 
-    @foreach (var group in Model.Courses.Select((item, index) => new { Item = item, Index = index })
-                         .GroupBy(x => x.Index / 4))
-    {
-        <div class="row" style="text-align: center;">
-            @foreach (var item in group.Select(g => g.Item))
-            {
-                <div class="col-md-3">
-                    <div class="card">                        
-                        <div class="card_body zoom">
-                            <img src="@item.ImageFullPath" style="height:150px; max-width:280px;" />
-                            <p class="mt-2">
-                                <div class="card_title">@item.Name</div>
-                                @item.Duration
-                                @item.Language
-                                <h4>@Html.DisplayFor(modelItem => item.Price)</h4>
-                            </p>
-                        </div>                        
-                        <div class="card_foot">
-                            <a asp-action="DetailsCourse" asp-route-courseId="@item.Id" class="btn btn-secondary">Detalles</a>
-                            <a asp-action="AddCourseInKart" asp-route-courseId="@item.Id" class="btn btn-primary">Comprar</a>
-                        </div>
-                    </div>
-                </div>                
-            }
-        </div>
-    }
+	<a asp-action="ShowCartAndConfirm" class="btn btn-outline-primary">Ver Carro de Compras</a>
+
+	@foreach (var group in Model.Courses.Select((item, index) => new { Item = item, Index = index })
+						.GroupBy(x => x.Index / 4))
+	{
+		<div class="courses_container">
+			<div class="row courses_row">
+			@foreach (var item in group.Select(g => g.Item))
+			{
+				<div class="col-lg-3 course_col">
+					<div class="course">
+							<div class="course_image"><img src="@item.ImageFullPath" />
+								<div class="course_body">
+									<h3 class="course_title">@item.Name</h3>
+										<div class="course_text">
+											<p>@item.Description</p>
+											<p>@item.Duration</p>
+											<p>@item.Language</p>
+										</div>
+									<div class="course_price ml-auto">@Html.DisplayFor(modelItem => item.Price)</div>
+								</div>
+								<div class="course_footer">
+									<div class="course_footer_content d-flex flex-row align-items-center justify-content-start">
+										<div class="course_info">
+											<i class="fa fa-graduation-cap" aria-hidden="true"></i>
+											<a asp-action="DetailsCourse" asp-route-courseId="@item.Id" class="btn btn-secondary">Detalles</a>
+										</div>
+										<div class="course_info">
+											<i class="fa fa-star" aria-hidden="true"></i>
+											<a asp-action="AddCourseInKart" asp-route-courseId="@item.Id" class="btn btn-primary">Comprar</a>
+										</div>
+									</div>
+								</div>						
+						</div>
+					</div>
+				</div>
+			}
+			</div>
+		</div>
+
+
+	}
 }
+
+
+                   

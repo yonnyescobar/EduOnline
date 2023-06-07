@@ -17,6 +17,403 @@ body {
   margin-bottom: 60px;
 }
 
+/*********************************
+3. Header
+*********************************/
+
+.header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 100;
+    box-shadow: 0px 5px 20px rgba(0,0,0,0.05);
+    -webkit-transition: all 200ms ease;
+    -moz-transition: all 200ms ease;
+    -ms-transition: all 200ms ease;
+    -o-transition: all 200ms ease;
+    transition: all 200ms ease;
+}
+
+    .header.scrolled {
+        top: -40px;
+    }
+
+/*********************************
+3.1 Top Bar
+*********************************/
+
+.top_bar {
+    width: 100%;
+    background: #14bdee;
+}
+
+.header.scrolled .top_bar {
+}
+
+.top_bar_container {
+    width: 100%;
+    height: 100%;
+}
+
+.top_bar_content {
+    width: 100%;
+    height: 40px;
+}
+
+.top_bar_contact_list li {
+    display: inline-block;
+}
+
+.question {
+    font-family: 'Roboto Slab', serif;
+    font-size: 14px;
+    color: #FFFFFF;
+    margin-left: 0px;
+}
+
+.top_bar_contact_list li i,
+.top_bar_contact_list li > div {
+    display: inline-block;
+    font-size: 14px;
+    color: #FFFFFF;
+}
+
+.top_bar_contact_list li > div {
+    margin-left: 1px;
+}
+
+.top_bar_contact_list li:not(:last-child) {
+    margin-right: 21px;
+}
+
+.top_bar_login {
+    height: 100%;
+}
+
+.login_button {
+    width: 160px;
+    height: 100%;
+    background: #f3f3f3;
+    text-align: center;
+}
+
+    .login_button a {
+        display: block;
+        font-size: 14px;
+        font-weight: 500;
+        line-height: 40px;
+        color: #384158;
+    }
+
+/*********************************
+3.3 Logo
+*********************************/
+
+.logo,
+.logo_text {
+    display: inline-block;
+}
+
+.logo {
+    width: 60px;
+    height: 60px;
+    -webkit-transition: all 200ms ease;
+    -moz-transition: all 200ms ease;
+    -ms-transition: all 200ms ease;
+    -o-transition: all 200ms ease;
+    transition: all 200ms ease;
+}
+
+    .logo img {
+        max-width: 100%;
+    }
+
+.logo_text {
+    font-family: 'Roboto Slab', serif;
+    font-size: 36px;
+    font-weight: 700;
+    line-height: 0.75;
+    color: #384158;
+    vertical-align: middle;
+    margin-left: 7px;
+    -webkit-transition: all 200ms ease;
+    -moz-transition: all 200ms ease;
+    -ms-transition: all 200ms ease;
+    -o-transition: all 200ms ease;
+    transition: all 200ms ease;
+}
+
+    .logo_text span {
+        color: #14bdee;
+    }
+
+.header.scrolled .logo {
+    width: 40px;
+    height: 40px;
+}
+
+.header.scrolled .logo_text {
+    font-size: 24px;
+}
+
+/*********************************
+3.4 Main Nav
+*********************************/
+
+.main_nav_contaner {
+}
+
+.main_nav,
+.search_button,
+.shopping_cart {
+    display: inline-block;
+}
+
+    .main_nav li {
+        display: inline-block;
+        position: relative;
+    }
+
+        .main_nav li:not(:last-child) {
+            margin-right: 44px;
+        }
+
+        .main_nav li a {
+            font-size: 18px;
+            font-weight: 500;
+            color: #384158;
+            -webkit-transition: all 200ms ease;
+            -moz-transition: all 200ms ease;
+            -ms-transition: all 200ms ease;
+            -o-transition: all 200ms ease;
+            transition: all 200ms ease;
+        }
+
+            .main_nav li a:hover,
+            .main_nav li.active a {
+                color: #14bdee;
+            }
+
+        .main_nav li.active::after {
+            display: block;
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: #14bdee;
+            content: '';
+        }
+
+.search_button {
+    margin-left: 46px;
+    cursor: pointer;
+}
+
+.shopping_cart {
+    margin-left: 23px;
+    cursor: pointer;
+}
+
+    .search_button i,
+    .shopping_cart i {
+        font-size: 18px;
+        color: #181818;
+        -webkit-transition: all 200ms ease;
+        -moz-transition: all 200ms ease;
+        -ms-transition: all 200ms ease;
+        -o-transition: all 200ms ease;
+        transition: all 200ms ease;
+    }
+
+    .search_button:hover i,
+    .shopping_cart:hover i {
+        color: #14bdee;
+    }
+
+.header_search_form {
+    display: block;
+    position: relative;
+    width: 40%;
+}
+
+.header_search_container {
+    position: absolute;
+    bottom: 0px;
+    left: 0px;
+    width: 100%;
+    background: #14bdee;
+    z-index: -1;
+    opacity: 0;
+    -webkit-transition: all 400ms ease;
+    -moz-transition: all 400ms ease;
+    -ms-transition: all 400ms ease;
+    -o-transition: all 400ms ease;
+    transition: all 400ms ease;
+}
+
+    .header_search_container.active {
+        bottom: -73px;
+        opacity: 1;
+    }
+
+.header_search_content {
+    width: 100%;
+    height: 73px;
+}
+
+.search_input {
+    width: 100%;
+    height: 40px;
+    border: none;
+    outline: none;
+    padding-left: 20px;
+}
+
+.header_search_button {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 40px;
+    height: 100%;
+    border: none;
+    outline: none;
+    cursor: pointer;
+}
+
+/*********************************
+8. Courses
+*********************************/
+
+.courses {
+    width: 100%;
+    padding-top: 93px;
+    padding-bottom: 100px;
+}
+
+.courses_row {
+    margin-top: 45px;
+}
+
+.course {
+    width: 100%;
+    border-radius: 6px;
+    background: #FFFFFF;
+    box-shadow: 0px 1px 10px rgba(29,34,47,0.1);
+}
+
+.course_image {
+    width: 100%;
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+    overflow: hidden;
+}
+
+    .course_image img {
+        max-width: 100%;
+    }
+
+.course_body {
+    padding-top: 22px;
+    padding-left: 30px;
+    padding-right: 30px;
+    padding-bottom: 23px;
+}
+
+.course_title a {
+    font-family: 'Roboto Slab', serif;
+    font-size: 20px;
+    color: #384158;
+    -webkit-transition: all 200ms ease;
+    -moz-transition: all 200ms ease;
+    -ms-transition: all 200ms ease;
+    -o-transition: all 200ms ease;
+    transition: all 200ms ease;
+}
+
+    .course_title a:hover {
+        color: #14bdee;
+    }
+
+.course_teacher {
+    font-size: 15px;
+    font-weight: 400;
+    color: #384158;
+    margin-top: 6px;
+}
+
+.course_text {
+    margin-top: 13px;
+}
+
+.course_footer {
+    padding-left: 30px;
+    padding-right: 30px;
+}
+
+.course_footer_content {
+    width: 100%;
+    border-top: solid 1px #e5e5e5;
+    padding-top: 9px;
+    padding-bottom: 11px;
+}
+
+.course_info {
+    display: inline-block;
+    font-size: 14px;
+    font-weight: 400;
+    color: #55555a;
+}
+
+    .course_info:first-child {
+        margin-right: 18px;
+    }
+
+    .course_info i {
+        color: #ffc80a;
+    }
+
+.course_price {
+    font-family: 'Roboto Slab', serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: #14bdee;
+}
+
+    .course_price span {
+        font-family: 'Roboto Slab', serif;
+        font-size: 14px;
+        font-weight: 400;
+        text-decoration: line-through;
+        color: #b5b8be;
+        margin-right: 10px;
+    }
+
+.courses_button {
+    width: 210px;
+    height: 46px;
+    border-radius: 3px;
+    background: #14bdee;
+    text-align: center;
+    margin: 0 auto;
+    margin-top: 41px;
+    box-shadow: 0px 5px 40px rgba(29,34,47,0.15);
+}
+
+    .courses_button:hover {
+        box-shadow: 0px 5px 40px rgba(29,34,47,0.45);
+    }
+
+    .courses_button a {
+        display: block;
+        font-size: 14px;
+        font-weight: 500;
+        text-transform: uppercase;
+        line-height: 46px;
+        color: #FFFFFF;
+    }
+
 @charset "utf-8";
 
 .card {

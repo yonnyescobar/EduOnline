@@ -10,55 +10,72 @@
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">EduOnline</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Inicio</a>
-                        </li>
-                        
-                        @if(User.Identity.IsAuthenticated && User.IsInRole("Administrador"))
-                        {                            
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Countries" asp-action="Index">Localización</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Categories" asp-action="Index">Categorías</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Users" asp-action="Index">Usuarios</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Courses" asp-action="Index">Cursos</a>
-                            </li>
-                        }
-                    </ul>
-                    <ul class="nav navbar-nav navbar-right">
-                        @if (User.Identity.IsAuthenticated)
-                        {
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="EditUser">@ViewBag.UserFullName</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Logout">Cerrar Sesión</a>
-                            </li>
-                        }
-                        else
-                        {
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Login">Iniciar Sesión</a>
-                            </li>
-                        }
-                    </ul>
+        <div class="top_bar">
+            <div class="top_bar_container">
+                <div class="container">
+                    <div class="row">
+                        <div class="col">
+                            <div class="nav navbar-nav navbar-right">
+                                <div class="top_bar_content d-flex flex-row align-items-center justify-content-start">
+                                    
+                                    @if (User.Identity.IsAuthenticated)
+                                    {
+                                        <div class="top_bar_login ml-auto">
+                                            <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="EditUser">@ViewBag.UserFullName </a>
+                                        </div>
+                                        <div class="top_bar_login ml-auto">
+                                            <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Logout">Cerrar Sesión</a>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="top_bar_login ml-auto">
+                                            <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Login">Iniciar Sesión</a>
+                                        </div>
+                                    }
+                            </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </nav>
+        </div>
+        <div class="header_container">
+            <div class="container">
+                <div class="row">
+                    <div class="col">
+                        <div class="header_content d-flex flex-row align-items-center justify-content-start">
+                            <div class="logo_container">
+                                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
+                                    <div class="logo_text">Edu<span>Online</span></div>
+                                </a>
+                            </div>
+                            <nav class="main_nav_contaner ml-auto">
+                                <ul class="main_nav">
+                                    <li class="active"><a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Inicio</a></li>
+                                    @if (User.Identity.IsAuthenticated && User.IsInRole("Administrador"))
+                                    {
+                                        <li><a class="nav-link text-dark" asp-area="" asp-controller="Countries" asp-action="Index">Localización</a></li>
+                                        <li><a class="nav-link text-dark" asp-area="" asp-controller="Categories" asp-action="Index">Categorías</a></li>
+                                        <li><a class="nav-link text-dark" asp-area="" asp-controller="Users" asp-action="Index">Usuarios</a></li>
+                                        <li><a class="nav-link text-dark" asp-area="" asp-controller="Courses" asp-action="Index">Cursos</a></li> 
+                                    }
+                                    
+                                </ul>
+                                <div class="search_button"><i class="fa fa-search" aria-hidden="true"></i></div>
+
+                                <!-- Hamburger -->
+
+                                <div class="shopping_cart"><i class="fa fa-shopping-cart" aria-hidden="true"></i></div>
+                                <div class="hamburger menu_mm">
+                                    <i class="fa fa-bars menu_mm" aria-hidden="true"></i>
+                                </div>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </header>
     <div class="container">
         <main role="main" class="pb-3">
