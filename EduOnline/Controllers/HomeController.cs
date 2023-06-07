@@ -195,8 +195,9 @@ namespace EduOnline.Controllers
 
             if (existingTemporalOrder != null)
             {
-                existingTemporalOrder.Quantity += detailsCourseToCartViewModel.Quantity;
-                existingTemporalOrder.ModifiedDate = DateTime.Now;
+                //existingTemporalOrder.Quantity += detailsCourseToCartViewModel.Quantity;
+                //existingTemporalOrder.ModifiedDate = DateTime.Now;
+                return RedirectToAction(nameof(TemporalOrderDuplicate));
             }
             else
             {
@@ -212,7 +213,7 @@ namespace EduOnline.Controllers
             }
 
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(ShowCartAndConfirm));
         }
 
         public async Task<IActionResult> DeleteTemporalOrder(Guid? temporalOrderId)
@@ -274,6 +275,13 @@ namespace EduOnline.Controllers
         {
             return View();
         }
+
+        [Authorize]
+        public IActionResult TemporalOrderDuplicate()
+        {
+            return View();
+        }
+
 
         public IActionResult Privacy()
         {
