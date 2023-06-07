@@ -72,6 +72,43 @@ namespace EduOnline.Controllers
             return View();
         }
 
+        public async Task<IActionResult> AddCourseInKart(Guid? courseId)
+        {
+            if (courseId == null) return NotFound();
+
+            if (!User.Identity.IsAuthenticated) return RedirectToAction("Login", "Account");
+
+            Course course = await _context.Courses.FindAsync(courseId);
+            User user = await _userHelper.GetUserAsync(User.Identity.Name);
+
+            if (user == null || course == null) return NotFound();
+
+            TemporalOrder existingTemporalOrder = await _context.TemporalOrders
+                .Where(t => t.Course.Id == courseId && t.User.Id == user.Id)
+                .FirstOrDefaultAsync();
+
+            if (existingTemporalOrder != null)
+            {
+                existingTemporalOrder.Quantity += 1;
+                existingTemporalOrder.ModifiedDate = DateTime.Now;
+            }
+            else
+            {
+                TemporalOrder temporalOrder = new()
+                {
+                    CreatedDate = DateTime.Now,
+                    Course = course,
+                    Quantity = 1,
+                    User = user
+                };
+
+                _context.TemporalOrders.Add(temporalOrder);
+            }
+
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
+
         #endregion
     }
 }
