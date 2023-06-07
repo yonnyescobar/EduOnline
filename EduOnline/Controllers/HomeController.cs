@@ -109,6 +109,43 @@ namespace EduOnline.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        public async Task<IActionResult> DetailsCourse(Guid? courseId)
+        {
+            if (courseId == null) return NotFound();
+
+            Course course = await _context.Courses
+                .Include(c => c.CourseImages)
+                .Include(c => c.CourseCategories)
+                .ThenInclude(cc => cc.Category)
+                .FirstOrDefaultAsync(c => c.Id == courseId);
+
+            if (course == null) return NotFound();
+
+            string categories = string.Empty;
+
+            foreach (CourseCategory? category in course.CourseCategories)
+                categories += $"{category.Category.Name}, ";
+
+            categories = categories.Substring(0, categories.Length - 2);
+
+            DetailsCourseToCartViewModel detailsCourseToCartViewModel = new()
+            {
+                Id = course.Id,
+                
+                Name = course.Name,
+                Description = course.Description,
+                Requirements = course.Requirements,
+                Duration = course.Duration,
+                Language = course.Language,
+                Price = course.Price,
+                Categories = categories,
+                CourseImages = course.CourseImages,
+                Quantity = 1,
+            };
+
+            return View(detailsCourseToCartViewModel);
+        }
+
         #endregion
     }
 }
