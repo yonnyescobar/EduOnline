@@ -1,21 +1,58 @@
-﻿using EduOnline.Models;
+﻿using EduOnline.DAL;
+using EduOnline.DAL.Entities;
+using EduOnline.Helpers;
+using EduOnline.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 
 namespace EduOnline.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        #region Dependencies & Properties
+        private readonly DatabaseContext _context;
+        private readonly IUserHelper _userHelper;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(DatabaseContext context, IUserHelper userHelper)
         {
-            _logger = logger;
+            _context = context;
+            _userHelper = userHelper;            
         }
 
-        public IActionResult Index()
+        #endregion
+
+        #region Methods & Actions
+
+        public async Task<IActionResult> Index()
         {
-            return View();
+            List<Course>? courses = await _context.Courses
+                .Include(c => c.CourseImages)
+                .Include(c => c.CourseCategories)
+                .OrderBy(p => p.Name)
+                .ToListAsync();
+
+            ViewBag.UserFullName = GetUserFullName();
+
+            HomeViewModel homeViewModel = new() { Courses = courses };
+
+            User user = await _userHelper.GetUserAsync(User.Identity.Name);
+            if (user != null)
+            {
+                //homeViewModel.Quantity = await _context.TemporalSales
+                //    .Where(ts => ts.User.Id == user.Id)
+                //    .SumAsync(ts => ts.Quantity);
+            }
+
+            return View(homeViewModel);
+        }
+
+        private string GetUserFullName()
+        {
+            return _context.Users
+                 .Where(u => u.Email == User.Identity.Name)
+                 .Select(u => u.FullName)
+                 .FirstOrDefault();
         }
 
         public IActionResult Privacy()
@@ -34,5 +71,7 @@ namespace EduOnline.Controllers
         {
             return View();
         }
+
+        #endregion
     }
 }
