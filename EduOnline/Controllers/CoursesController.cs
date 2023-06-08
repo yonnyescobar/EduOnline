@@ -62,6 +62,7 @@ namespace EduOnline.Controllers
 
                     Course course = new()
                     {
+                        Id = new Guid(),
                         Name = addCourseViewModel.Name,
                         Description = addCourseViewModel.Description,
                         Requirements = addCourseViewModel.Requirements,
@@ -82,7 +83,7 @@ namespace EduOnline.Controllers
                     {
                         course.CourseImages = new List<CourseImage>()
                         {
-                            new CourseImage { ImageId = imageId }
+                            new CourseImage { ImageId = imageId, Id = new Guid() }
                         };
                     }
 
